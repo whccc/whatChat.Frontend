@@ -1,10 +1,15 @@
-import Head from "next/head";
-import Login from "../login/pages/login.page";
+import type { NextPage } from "next";
+import Link from "next/link";
 
-export default function Home() {
+const Home: NextPage = () => {
   return (
     <div>
-      <Login />
+      <h1>Bienvenidos Chat WHC</h1>
+      <button>
+        <Link href="/Login">Iniciar Sessio</Link>
+      </button>
     </div>
   );
-}
+};
+
+export default Home;

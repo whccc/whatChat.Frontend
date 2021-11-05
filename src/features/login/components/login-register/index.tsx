@@ -1,38 +1,47 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import ModalCapturePicture from "../login-modal-capture-picture";
 import { CardContainer } from "../../../../styles/styles.cardmain";
+import { ContainerRegister, ImgRegister } from "./styles";
+import { Input } from "../../../../styles/styles.inputsmain";
+import { ButtonPrimary } from "../../../../styles/styles.buttonsmain";
+import { LabelForm } from "../../../../styles/styles.labelsmain";
 const registerComponent = () => {
   const [showModalCapture, setShowModalCapture] = useState(false);
-  const [uriImgPicture, setUriImgPicture] = useState("");
+  const [uriImgPicture, setUriImgPicture] = useState("/Avatar.png");
+  const useImg = useRef(null);
 
   //Capturando foto tomada
-  const capturePicture = (dataPictureBased64: string) => {
+  const capturePicture = async (dataPictureBased64: string) => {
     setUriImgPicture(dataPictureBased64);
   };
 
   return (
-    <CardContainer>
-      <div>
-        <label>Usuario</label>
-        <input type="text" />
-        <hr />
-        <div>
+    <>
+      <ContainerRegister>
+        <CardContainer>
+          <LabelForm>Usuario</LabelForm>
+          <Input type="text" placeholder="Usuario" />
+          <hr />
           <div>
-            <img src={uriImgPicture} />
+            <div>
+              <ImgRegister src={uriImgPicture} ref={useImg} />
+            </div>
+            <ButtonPrimary onClick={() => setShowModalCapture(true)}>
+              Contraseña foto
+            </ButtonPrimary>
           </div>
-          <button onClick={() => setShowModalCapture(true)}>Tomar foto</button>
-        </div>
-        <div>
-          <button>Registrar</button>
-        </div>
-      </div>
-
+          <hr />
+          <div>
+            <ButtonPrimary>Registrar</ButtonPrimary>
+          </div>
+        </CardContainer>
+      </ContainerRegister>{" "}
       <ModalCapturePicture
         showStateModal={showModalCapture}
         capturePicture={(data) => capturePicture(data)}
         setShowModalCapture={(data) => setShowModalCapture(data)}
       />
-    </CardContainer>
+    </>
   );
 };
 

@@ -7,6 +7,8 @@ export const ContainerModal = styled.div`
   right: 0;
   left: 0;
   bottom: 0;
+  padding-top: 15px;
+  overflow: auto;
 `;
 
 export const ContainerModalData = styled.div`
@@ -18,8 +20,13 @@ export const ContainerModalData = styled.div`
 `;
 
 export const ContainerModalCamera = styled.div`
+  position: relative;
   & video,
   img {
     width: 100%;
+  }
+
+  #container-circles {
+    display: none;
   }
 `;

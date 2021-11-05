@@ -1,9 +1,10 @@
 import RegisterComponent from "../../components/login-register";
+import { ContainerPage } from "../../../../styles/styles.pagesmain";
 const registerPage = () => {
   return (
-    <div>
+    <ContainerPage>
       <RegisterComponent />
-    </div>
+    </ContainerPage>
   );
 };
 

@@ -18,6 +18,6 @@ export async function getFullFaceDescription(
     .detectAllFaces(refImgCanvas, new faceapi.TinyFaceDetectorOptions())
     .withFaceLandmarks(true)
     .withFaceDescriptors();
-
+  //Hola teo
   return fullDesc;
 }

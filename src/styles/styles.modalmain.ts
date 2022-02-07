@@ -25,8 +25,4 @@ export const ContainerModalCamera = styled.div`
   img {
     width: 100%;
   }
-
-  #container-circles {
-    display: none;
-  }
 `;

@@ -4,12 +4,17 @@ import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 import "modern-normalize/modern-normalize.css";
 import GlobalStyle from "../styles/styles.global";
-
+import { ReactQueryDevtools } from "react-query/devtools";
+import { QueryClient, QueryClientProvider } from "react-query";
+const queryClient = new QueryClient();
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <GlobalStyle />
-      <Component {...pageProps} />
+      <QueryClientProvider client={queryClient}>
+        <Component {...pageProps} />
+        <ReactQueryDevtools />
+      </QueryClientProvider>
     </>
   );
 }

@@ -18,6 +18,24 @@ export async function getFullFaceDescription(
     .detectAllFaces(refImgCanvas, new faceapi.TinyFaceDetectorOptions())
     .withFaceLandmarks(true)
     .withFaceDescriptors();
-  //Hola teo
+
+  //Detectando similaridad
+  const imgEle = document.createElement("img");
+  imgEle.src = "/yo.jpg";
+  let refe = await faceapi
+    .detectAllFaces(imgEle, new faceapi.TinyFaceDetectorOptions())
+    .withFaceLandmarks(true)
+    .withFaceDescriptors();
+
+  if (fullDesc.length !== 0) {
+    const faceMatcher = new faceapi.FaceMatcher(fullDesc);
+
+    if (refe) {
+      const bestMatch = faceMatcher.findBestMatch(refe[0].descriptor);
+      console.log(bestMatch);
+    }
+  }
+
+  console.log(refe, "holaa", fullDesc);
   return fullDesc;
 }

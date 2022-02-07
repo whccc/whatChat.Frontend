@@ -24,6 +24,7 @@ const modalCapturePicture = ({
   const handleTakePhoto = (dataUri: string) => {
     if (dataUri) {
       capturePicture(dataUri);
+      setShowModalCapture(false);
     }
   };
 
@@ -39,12 +40,13 @@ const modalCapturePicture = ({
       const arrayFace = await getFullFaceDescription(
         videoImg.current.children[0].children[2]
       );
+      console.log(arrayFace);
       if (arrayFace.length !== 0) {
-        videoImg.current.children[0].children[3].children[0].click();
+        /* videoImg.current.children[0].children[3].children[0].click();
         clearInterval(interval);
         setTimeout(() => {
           setShowModalCapture(false);
-        }, 1000);
+        }, 1000);*/
       }
     }, 100);
   };
@@ -59,9 +61,6 @@ const modalCapturePicture = ({
               handleTakePhoto(dataUri);
             }}
             sizeFactor={0.5}
-            onCameraStart={() => {
-              initialDetectionFacial();
-            }}
           />
         </ContainerModalCamera>
         <ButtonPrimary

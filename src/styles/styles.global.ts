@@ -2,10 +2,15 @@ import { createGlobalStyle } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
   
+    html,body{
+            height: 100%;
+                position: relative;
+        }
 
     body{
         background-color: rgba(94,155,216,0.4);
         font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    
     }
     hr{
         border:none;

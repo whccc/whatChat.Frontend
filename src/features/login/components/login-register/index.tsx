@@ -100,6 +100,9 @@ const registerComponent = () => {
           </div>
           <hr />
           <div>
+            <ButtonPrimary onClick={() => router.push("/Login")}>
+              Cancelar
+            </ButtonPrimary>{" "}
             <ButtonPrimary onClick={onRegisterUser}>Registrar</ButtonPrimary>
           </div>
         </CardContainer>

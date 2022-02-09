@@ -3,6 +3,7 @@ import "primereact/resources/themes/saga-blue/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 import "modern-normalize/modern-normalize.css";
+import "react-html5-camera-photo/build/css/index.css";
 import GlobalStyle from "../styles/styles.global";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { QueryClient, QueryClientProvider } from "react-query";
@@ -13,7 +14,6 @@ function MyApp({ Component, pageProps }: AppProps) {
       <GlobalStyle />
       <QueryClientProvider client={queryClient}>
         <Component {...pageProps} />
-        <ReactQueryDevtools />
       </QueryClientProvider>
     </>
   );

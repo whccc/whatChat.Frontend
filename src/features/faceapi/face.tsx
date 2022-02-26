@@ -8,10 +8,12 @@ export async function loadModels() {
   await faceapi.loadFaceRecognitionModel(MODEL_URL);
   await faceapi.loadFaceExpressionModel(MODEL_URL);
 }
-
+//Validando dos imagenes similares
 export async function getFullFaceDescription(
-  refImgCanvas: any
-): Promise<any[]> {
+  refImgCanvas: any,
+  imgSecondary: string = ""
+): Promise<number> {
+  let bestMatch: any = 100;
   // detect all faces and generate full description from image
   // including landmark and descriptor of each face
   let fullDesc = await faceapi
@@ -21,21 +23,18 @@ export async function getFullFaceDescription(
 
   //Detectando similaridad
   const imgEle = document.createElement("img");
-  imgEle.src = "/yo.jpg";
+  imgEle.src = imgSecondary;
   let refe = await faceapi
     .detectAllFaces(imgEle, new faceapi.TinyFaceDetectorOptions())
     .withFaceLandmarks(true)
     .withFaceDescriptors();
-
   if (fullDesc.length !== 0) {
     const faceMatcher = new faceapi.FaceMatcher(fullDesc);
 
     if (refe) {
-      const bestMatch = faceMatcher.findBestMatch(refe[0].descriptor);
-      console.log(bestMatch);
+      bestMatch = faceMatcher.findBestMatch(refe[0].descriptor);
     }
   }
-
-  console.log(refe, "holaa", fullDesc);
-  return fullDesc;
+  console.log(fullDesc, refe);
+  return bestMatch?._distance;
 }

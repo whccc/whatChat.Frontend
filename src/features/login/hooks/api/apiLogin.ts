@@ -11,3 +11,14 @@ export const postRegister = async (
   const { data } = await axios.post("http://localhost:5000/api/user", dataUser);
   return data;
 };
+
+//Obtener usuario por email
+export const getUserByEmail = async (
+  email: string
+): Promise<IApiResponse<IRegisterUser>> => {
+  console.log("apiii");
+  const { data } = await axios.get(
+    `http://localhost:5000/api/user/by-email/${email}`
+  );
+  return data;
+};

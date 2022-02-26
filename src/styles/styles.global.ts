@@ -1,7 +1,7 @@
 import { createGlobalStyle } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
-  
+ 
     html,body{
             height: 100%;
                 position: relative;
@@ -18,6 +18,15 @@ const GlobalStyle = createGlobalStyle`
     }
     img{
         object-fit: contain;
+    }
+    input{
+        outline: none;
+    }
+    :root{
+      --color-one:#f0f2f5;
+      --color-two:#54656f;
+      --color-white:#fff;
+      --color-three:#e9edef;
     }
 
 `;

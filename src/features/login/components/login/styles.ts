@@ -8,3 +8,9 @@ export const ContainerLogin = styled.div`
   max-width: 500px;
   margin: auto;
 `;
+
+export const ContainerImgMatch = styled.div`
+  & img {
+    width: 100%;
+  }
+`;

@@ -9,3 +9,14 @@ export const Input = styled.input`
   padding: 5px;
   width: 100%;
 `;
+
+export const InputTwo = styled.input`
+  background: var(--color-one);
+  width: 100%;
+  border-radius: 8px;
+  border: none;
+  height: 35px;
+  padding-left: 10px;
+  padding-right: 10px;
+  font-size: 13px;
+`;

@@ -35,8 +35,8 @@ const chatContainerChats = () => {
           <input type="text" placeholder="Busca un chat o inicia uno nuevo" />
         </div>
         <ContainerSectionTwoChats>
-          {[1, 2, 3, 4, 7, 8, 9, 9, 6, 5].map(() => {
-            return <CardChat />;
+          {[1, 2, 3, 4, 7, 8, 9, 9, 6, 5].map((index) => {
+            return <CardChat key={index} />;
           })}
         </ContainerSectionTwoChats>
       </ContainerSectionTwo>

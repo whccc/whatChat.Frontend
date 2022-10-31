@@ -1,11 +1,19 @@
+import { useEffect } from "react";
 import SessionPage from "../../features/login/pages/login-session-page";
+import useAuth from "../../hooks/useAuth";
 
-const loginPage = () => {
-  return (
+const LoginPage = () => {
+  const { checkIfYourAreLoggedIn, loadAuth } = useAuth();
+  useEffect(() => {
+    checkIfYourAreLoggedIn();
+  }, []);
+  return loadAuth ? (
+    <div>loading...</div>
+  ) : (
     <div>
       <SessionPage />
     </div>
   );
 };
 
-export default loginPage;
+export default LoginPage;

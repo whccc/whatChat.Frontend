@@ -5,3 +5,11 @@ export interface IApiResponse<T> {
     message: string;
   };
 }
+
+export interface IModalConfirm {
+  tittle: string;
+  message: string;
+  close: () => void;
+  showModal: boolean;
+  typeMessage: string;
+}

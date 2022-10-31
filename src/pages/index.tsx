@@ -1,13 +1,11 @@
 import type { NextPage } from "next";
 import Link from "next/link";
+import LoginPage from "./Login";
 
 const Home: NextPage = () => {
   return (
     <div>
-      <h1>Bienvenidos Chat WHC</h1>
-      <button>
-        <Link href="/Login">Iniciar Sessio</Link>
-      </button>
+      <h1 style={{ textAlign: "center" }}>Bienvenidos Chat WHC</h1>
     </div>
   );
 };

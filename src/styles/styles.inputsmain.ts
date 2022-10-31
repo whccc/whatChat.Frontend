@@ -1,13 +1,19 @@
 import styled from "styled-components";
-
-export const Input = styled.input`
+interface inputProps {
+  showError: boolean;
+}
+export const Input = styled.input<inputProps>`
   background: #fff 0 0 no-repeat padding-box;
-  border: 0.5px solid #707070;
+  border: 1px solid ${(props) => (props.showError ? "#ad0808" : "#e2e2e2")};
   border-radius: 6px;
-  height: 30px;
+  height: 39px;
   outline: none;
   padding: 5px;
   width: 100%;
+  font: normal normal normal 12px/16px MontserratRegular;
+  &:hover {
+    border-color: var(--color-four);
+  }
 `;
 
 export const InputTwo = styled.input`
@@ -19,4 +25,5 @@ export const InputTwo = styled.input`
   padding-left: 10px;
   padding-right: 10px;
   font-size: 13px;
+  font: normal normal normal 12px/16px MontserratRegular;
 `;

@@ -1,9 +1,9 @@
 import { Container, ContainerMessage } from "./styles";
 
-const cardMessage = () => {
+const cardMessage = ({ message }: { message: string }) => {
   return (
     <Container>
-      <ContainerMessage>s</ContainerMessage>
+      <ContainerMessage>{message}</ContainerMessage>
     </Container>
   );
 };

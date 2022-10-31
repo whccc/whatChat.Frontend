@@ -1,3 +1,6 @@
+import { useContext, useEffect } from "react";
+import chatOpenContext from "../../../../context/chatOpenContext";
+import chatsContext from "../../../../context/chatsContext";
 import { InputTwo } from "../../../../styles/styles.inputsmain";
 import CardMessage from "../cardMessage";
 import {
@@ -7,9 +10,22 @@ import {
   ContainerMessage,
 } from "./styles";
 
-const chatContainerChat = () => {
+const chatContainerChat = ({ socketIO }) => {
+  const { data, setUpdateOpenChat } = useContext(chatOpenContext);
+
   return (
     <Container>
+      <button
+        onClick={() => {
+          setUpdateOpenChat(
+            (data: { header: null; message: Array<string> }) => {
+              return { header: null, messages: [...data.messages, "e"] };
+            }
+          );
+        }}
+      >
+        Cambio
+      </button>
       {/* Header */}
       <ContainerHeader>
         <div>
@@ -38,8 +54,8 @@ const chatContainerChat = () => {
 
       {/* Mensajes */}
       <ContainerMessage>
-        {[1, 3, 4, 5, 6, 7, 8, 9, 0, 6, 4, 3, 4, 5, 5, 6, 7, 8, 7].map(() => (
-          <CardMessage />
+        {data.messages.map((message, index) => (
+          <CardMessage key={index} message={message} />
         ))}
       </ContainerMessage>
 

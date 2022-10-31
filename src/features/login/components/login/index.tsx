@@ -1,118 +1,109 @@
-import { ButtonPrimary } from "../../../../styles/styles.buttonsmain";
-import { CardContainer } from "../../../../styles/styles.cardmain";
+import {
+  ButtonPrimary,
+  ButtonTernary,
+} from "../../../../styles/styles.buttonsmain";
+import {
+  CardContainer,
+  ContainerGrid,
+} from "../../../../styles/styles.cardmain";
 import { Input } from "../../../../styles/styles.inputsmain";
-import { LabelForm } from "../../../../styles/styles.labelsmain";
-import Link from "next/link";
-import Camera from "react-html5-camera-photo";
-import { ContainerImgMatch, ContainerLogin } from "./styles";
-import { ContainerModalCamera } from "../../../../styles/styles.modalmain";
+import {
+  LabelForm,
+  LabelFormError,
+} from "../../../../styles/styles.labelsmain";
+import { ContainerLogin } from "./styles";
 import { useRouter } from "next/dist/client/router";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useGetUserByEmail } from "../../hooks/useLogin";
-import { QueryClient, useQueryClient } from "react-query";
 import { Toast } from "primereact/toast";
-import { getFullFaceDescription, loadModels } from "../../../faceapi/face";
-import { domainCode } from "../../../helpers/domainApi";
+import { domainCode } from "../../../../helpers/domainApi";
+import modalConfirmContext from "../../../../context/modalConfirmContext";
+import { IApiResponse } from "../../../shared/models/shared.model";
+import { IRegisterUser, IUser } from "../../models/login.model";
 
 const loginComponent = () => {
-  const [pictureBase64, setPictureBase64] = useState("");
-  const [email, setEmail] = useState("");
+  const { handleChangeDataModalConfirm } = useContext(modalConfirmContext);
+  const [email, setEmail] = useState({
+    value: null || "",
+    showError: false,
+  });
   const router = useRouter();
-  const imgRefUser = useRef(null);
   const toast = useRef<any>(null);
+
   //Hooks
-  const { data, refetch } = useGetUserByEmail(email);
-  const queryClient = useQueryClient();
-  //Cargando modelos de detección de cara
-  useEffect(() => {
-    loadModels();
-  }, []);
+  const { refetch } = useGetUserByEmail(email.value);
 
-  //Validando macth entre imagenes
-  const validImgsUser = async () => {
-    console.log(data, "dataa");
-    if (data?.operation.code === domainCode.FAIL) {
-      toast.current.show({
-        severity: "success",
-        summary: "Success Message",
-        detail: "Order submitted",
-      });
-      queryClient.setQueriesData("userByEmail", null);
-      return;
-    }
-    //Validando fotos clave usuario
-    const valid = await getFullFaceDescription(
-      imgRefUser.current,
-      data!.data.imgBase64
-    );
-    if (!valid) {
-      queryClient.setQueriesData("userByEmail", null);
-    }
-
-    if (valid <= 0.5) {
-      alert("bienvenido");
-    }
-  };
-  //Obtener foto
-  const handledTakePicture = (pictureBase64: string): void => {
-    setPictureBase64(pictureBase64);
-  };
-
-  //Obtener usuario por email
-  const getUserByEmail = () => {
-    refetch();
-  };
-
-  useEffect(() => {
+  const dataUserFetch = ({ data, operation }: IApiResponse<IUser>) => {
     if (!data) {
       return;
     }
-    validImgsUser();
-  }, [data]);
+    if (operation.code === domainCode.BUSINESS) {
+      handleChangeDataModalConfirm(
+        true,
+        "No existe",
+        operation.message,
+        "Error"
+      );
+      return;
+    }
+    localStorage.setItem("token", JSON.stringify(data.token));
+    document.cookie = `token=${data.token}; path=/`;
+    delete data["token"];
+    localStorage.setItem("userData", JSON.stringify(data));
+    router.push("/Chat");
+  };
 
+  const getUserByEmail = async () => {
+    if (!email.value) {
+      setEmail({ ...email, showError: true });
+      return;
+    }
+    const data = await refetch();
+    if (data && data.data) {
+      dataUserFetch(data.data);
+    }
+  };
   return (
     <>
       <Toast ref={toast} />
       <ContainerLogin>
         <CardContainer>
-          <h3>Login - WhcChat</h3>
+          <h2>Login</h2>
           <hr />
-          <LabelForm>Email</LabelForm>
-          <Input
-            type={"text"}
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value.trim())}
-          />
-          <LabelForm>Contraseña Rostro</LabelForm>
-          {pictureBase64 ? (
-            <ContainerImgMatch>
-              <img src={pictureBase64} ref={imgRefUser} />
-              <ButtonPrimary
-                onClick={() => {
-                  setPictureBase64("");
-                }}
-              >
-                Cancelar
-              </ButtonPrimary>
-            </ContainerImgMatch>
-          ) : (
-            <ContainerModalCamera>
-              <Camera
-                sizeFactor={1}
-                onTakePhoto={(imgBase64: string) => {
-                  handledTakePicture(imgBase64);
-                }}
+          <ContainerGrid>
+            <div>
+              <LabelForm>Email</LabelForm>
+              <Input
+                type={"text"}
+                placeholder="Email"
+                value={email.value}
+                onChange={(e) =>
+                  setEmail({ value: e.target.value.trim(), showError: false })
+                }
+                showError={email.showError}
               />
-            </ContainerModalCamera>
-          )}
+              {email.showError && (
+                <LabelFormError>Este campo es requerido.</LabelFormError>
+              )}
+            </div>
+          </ContainerGrid>
           <hr />
-          <ButtonPrimary onClick={() => getUserByEmail()}>
-            Iniciar Sesión
-          </ButtonPrimary>{" "}
-          <ButtonPrimary onClick={() => router.push("/Login/Register")}>
-            Registro
-          </ButtonPrimary>
+
+          <div className="text-right">
+            <ButtonTernary
+              className="margin-right"
+              onClick={() => router.push("/Login/Register")}
+            >
+              Registro
+            </ButtonTernary>
+            <ButtonPrimary
+              onClick={() => {
+                getUserByEmail();
+              }}
+            >
+              Iniciar Sesión
+            </ButtonPrimary>
+          </div>
         </CardContainer>
       </ContainerLogin>
     </>

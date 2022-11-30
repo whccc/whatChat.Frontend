@@ -8,3 +8,9 @@ export const Container = styled.div`
   max-width: 1800px;
   margin: auto;
 `;
+
+export const WrapperToastMessage = styled.div`
+  & span.p-toast-message-icon.pi.pi-check {
+    display: none;
+  }
+`;

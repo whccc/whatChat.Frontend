@@ -13,4 +13,10 @@ export const Container = styled.div`
     border-radius: 100%;
     padding: 10px;
   }
+
+  &:hover {
+    opacity: 0.5;
+    cursor: pointer;
+    transition: all ease-in-out 0.2s;
+  }
 `;

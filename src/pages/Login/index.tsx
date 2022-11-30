@@ -5,9 +5,9 @@ import useAuth from "../../hooks/useAuth";
 const LoginPage = () => {
   const { checkIfYourAreLoggedIn, loadAuth } = useAuth();
   useEffect(() => {
-    checkIfYourAreLoggedIn();
+    //checkIfYourAreLoggedIn();
   }, []);
-  return loadAuth ? (
+  return false ? (
     <div>loading...</div>
   ) : (
     <div>

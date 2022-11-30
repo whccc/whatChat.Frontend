@@ -1,13 +1,29 @@
+import { IChat } from "../../../login/models/login.model";
 import { Container } from "./styles";
 
-const cardChat = () => {
+const cardChat = ({
+  dataChat,
+  userIdUniqueLogin,
+  updateChatOpen,
+}: {
+  dataChat: IChat;
+  userIdUniqueLogin: string;
+  updateChatOpen: (chat: IChat) => void;
+}) => {
+  const filterUserLogin = dataChat.members.filter(
+    (m) => m.idUnique !== userIdUniqueLogin
+  );
+
+  const changeChatOpen = () => {
+    updateChatOpen(dataChat);
+  };
   return (
-    <Container>
+    <Container onClick={changeChatOpen}>
       <div>
-        <img src="/yo.jpg" />
+        <img src={filterUserLogin[0].picture || "/yo.jpg"} />
       </div>
 
-      <div>holaaa</div>
+      <div>{filterUserLogin[0].userName}</div>
     </Container>
   );
 };

@@ -1,8 +1,12 @@
 import { useContext, useEffect, useState } from "react";
 import { useQueryClient } from "react-query";
 import chatOpenContext from "../../../../context/chatOpenContext";
-import { IUser } from "../../../login/models/login.model";
+import chatsContext from "../../../../context/chatsContext";
+import { sortArrayJson } from "../../../../helpers/helpers";
+import useUser from "../../../../hooks/useUser";
+import { IChat, IUser } from "../../../login/models/login.model";
 import { userSearch } from "../../hooks/useChat";
+import useChats from "../../hooks/useChats";
 import AutoCompleteSearch from "../autoCompleteSearch";
 import CardChat from "../cardChat";
 import {
@@ -13,30 +17,56 @@ import {
 } from "./styles";
 
 const chatContainerChats = ({ socketIO }: { socketIO: any }) => {
-  const userQuery = useQueryClient();
-  const [user, setUser] = useState("");
-  const { data, refetch } = userSearch(user);
-  const [userData, setUserData] = useState<IUser | null>(null);
+  const [user, setUser] = useState<IUser | null>(null);
+  const [userSearchInput, setUserSearchInput] = useState("");
+  const useQueryClientHook = useQueryClient();
 
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("userData") || "");
-    setUserData(user);
-  }, []);
+  const { data, refetch } = userSearch(userSearchInput);
+  const { getUserLogin, deleteUserLogin } = useUser();
 
-  useEffect(() => {
-    if (user === "") {
-      userQuery.setQueriesData(["userSearchChat"], null);
+  const { updateChatOpen } = useContext(chatOpenContext);
+  const { chats, updateAddNewChat } = useContext(chatsContext);
+
+  /**************************/
+  /******** METODOS *********/
+  /**************************/
+  const getChats = () => {
+    const user = getUserLogin();
+    if (!user) {
+      return;
+    }
+    setUser(user);
+    addChatsOfUser(user);
+  };
+
+  const addChatsOfUser = (user: IUser) => {
+    for (const [order, data] of user.dataChats.entries()) {
+      updateAddNewChat({ ...data, order, isWriting: false });
+    }
+  };
+  console.log(user, chats.length);
+  const getUserBySearch = async () => {
+    if (userSearchInput === "") {
+      useQueryClientHook.setQueriesData(["userSearchChat"], null);
       return;
     }
     refetch();
-  }, [user]);
+  };
+
+  useEffect(() => {
+    getChats();
+  }, []);
+
+  useEffect(() => {
+    getUserBySearch();
+  }, [userSearchInput]);
 
   return (
     <Container>
       <ContainerSectionOne>
         <div>
-          <img src={userData?.person?.picture || "./Avatar.png"} />
-          <label>{userData?.userName}</label>
+          <img src={user?.picture || "./Avatar.png"} />
+          <label>{user?.userName}</label>
         </div>
 
         <div>
@@ -49,27 +79,48 @@ const chatContainerChats = ({ socketIO }: { socketIO: any }) => {
           </div>
 
           <div>
-            <i className="pi pi-briefcase"></i>
+            <i className="pi pi-sign-out" onClick={deleteUserLogin}></i>
           </div>
         </div>
       </ContainerSectionOne>
       {/* Container de Chats */}
       <ContainerSectionTwo>
-        <div>
-          <i className="pi pi-search"></i>
-          <input
-            type="text"
-            placeholder="Busca un chat o inicia uno nuevo"
-            onChange={(e) => setUser(e.target.value)}
-          />
-          {data && (
-            <AutoCompleteSearch dataUsers={data?.data!} socketIO={socketIO} />
-          )}
+        <div className="wrapper-serch-user">
+          <div>
+            <i className="pi pi-search"></i>
+            <input
+              value={userSearchInput}
+              type="search"
+              placeholder="Busca un chat o inicia uno nuevo"
+              onChange={(e) => setUserSearchInput(e.target.value)}
+            />
+          </div>
         </div>
+        {data && user && (
+          <AutoCompleteSearch
+            dataUsers={data.data}
+            socketIO={socketIO}
+            updatetUserSearchInput={(value: string) => {
+              setUserSearchInput(value);
+            }}
+          />
+        )}
         <ContainerSectionTwoChats>
-          {[1, 2, 3, 4, 7, 8, 9, 9, 6, 5].map((index) => {
-            return <CardChat key={index} />;
-          })}
+          {chats.length === 0 && <p>No tiene chats</p>}
+          {chats &&
+            user &&
+            chats
+              .sort((a, b) => sortArrayJson(a, b, "order"))
+              .map((data, i) => {
+                return (
+                  <CardChat
+                    key={i}
+                    dataChat={data}
+                    userIdUniqueLogin={user.idUnique}
+                    updateChatOpen={updateChatOpen}
+                  />
+                );
+              })}
         </ContainerSectionTwoChats>
       </ContainerSectionTwo>
     </Container>

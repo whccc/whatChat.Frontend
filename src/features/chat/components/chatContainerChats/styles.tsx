@@ -19,7 +19,17 @@ export const ContainerSectionOne = styled.div`
     border-radius: 100%;
     border: 0.5px solid #ddd;
   }
-
+  & i {
+    cursor: pointer;
+  }
+  & > div:nth-child(1) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    & label {
+      margin-left: 10px;
+    }
+  }
   & > div:nth-child(2) {
     flex: 1 1 auto;
     display: flex;
@@ -36,6 +46,7 @@ export const ContainerSectionOne = styled.div`
 export const ContainerSectionTwo = styled.div`
   height: calc(100% - 60px);
   background-color: var(--color-white);
+  position: relative;
   & > div:nth-child(1) {
     position: relative;
     border-bottom: 0.5px solid var(--color-three);
@@ -60,6 +71,11 @@ export const ContainerSectionTwo = styled.div`
       font-weight: 900;
       font-size: 13px;
     }
+  }
+
+  & .wrapper-serch-user {
+    z-index: 3;
+    position: relative;
   }
 `;
 

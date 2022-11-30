@@ -16,7 +16,7 @@ import { useRouter } from "next/dist/client/router";
 import { useContext, useEffect, useRef, useState } from "react";
 import { useGetUserByEmail } from "../../hooks/useLogin";
 import { Toast } from "primereact/toast";
-import { domainCode } from "../../../../helpers/domainApi";
+import { domainCode } from "../../../../constants/domainApi";
 import modalConfirmContext from "../../../../context/modalConfirmContext";
 import { IApiResponse } from "../../../shared/models/shared.model";
 import { IRegisterUser, IUser } from "../../models/login.model";

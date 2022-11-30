@@ -1,33 +1,32 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useRef } from "react";
 import ChatPage from "../../features/chat/pages/chat-page";
-import socketIOClient from "socket.io-client";
 import conectionSocketIOContext from "../../context/conectionSocketContext";
 import chatsContext from "../../context/chatsContext";
 import chatOpenContext from "../../context/chatOpenContext";
-import useUser from "../../hooks/useUser";
 import useValidAuth from "../../hooks/useAuth";
+import useSocket from "../../hooks/useSocket";
+import useChatOpen from "../../features/chat/hooks/useChatOpen";
+import useChats from "../../features/chat/hooks/useChats";
+import { Toast } from "primereact/toast";
+import { WrapperToastMessage } from "../../features/chat/pages/chat-page/styles";
 
 const chatsPage = () => {
-  const user = useUser().getUserLogin();
-  const [socketIO, setSocketIO] = useState(user?.uuid as any);
-  const [userLoginChat, setUserLoginChat] = useState(user?.dataChat as any);
-  const { validIfTokenExits, loadAuth } = useValidAuth();
-  const [chatOpen, setUpdateOpenChat] = useState({
-    header: null,
-    messages: [],
-  });
+  const toast = useRef<Toast>(null);
+  const audio = useRef<HTMLAudioElement>(null);
 
-  const validToken = () => {
-    validIfTokenExits();
-  };
+  const { validIfTokenExits, loadAuth } = useValidAuth();
+  const { socket, conectionSocket } = useSocket();
+  const { chat, updateChatOpen, updateMessageChatOpen } = useChatOpen();
+  const {
+    chats,
+    updateAddNewChat,
+    addNewMessageChat,
+    chatByIdHookChatsHookChats,
+  } = useChats();
 
   useEffect(() => {
-    validToken();
-    const socket = socketIOClient("http://localhost:4000", {
-      query: { id: user?.uuid },
-    });
-
-    //window.addEventListener("focus", (e) => window.location.reload());
+    validIfTokenExits();
+    const socket = conectionSocket();
     return () => {
       socket.disconnect();
     };
@@ -36,17 +35,32 @@ const chatsPage = () => {
   return loadAuth ? (
     <div>loadding..</div>
   ) : (
-    <conectionSocketIOContext.Provider value={socketIO}>
-      <chatsContext.Provider
-        value={{ chats: userLoginChat, setChats: setUserLoginChat }}
-      >
-        <chatOpenContext.Provider value={{ data: chatOpen, setUpdateOpenChat }}>
-          <div>
-            <ChatPage />
-          </div>
+    <>
+      <conectionSocketIOContext.Provider value={socket}>
+        <chatOpenContext.Provider
+          value={{ data: chat, updateChatOpen, updateMessageChatOpen }}
+        >
+          <chatsContext.Provider
+            value={{
+              chats,
+              updateAddNewChat,
+              addNewMessageChat,
+              chatByIdHookChatsHookChats,
+            }}
+          >
+            <div>
+              <ChatPage />
+            </div>
+          </chatsContext.Provider>
         </chatOpenContext.Provider>
-      </chatsContext.Provider>
-    </conectionSocketIOContext.Provider>
+      </conectionSocketIOContext.Provider>
+      <>
+        <WrapperToastMessage>
+          <Toast ref={toast} />
+        </WrapperToastMessage>
+        <audio ref={audio} src="/message.mp3"></audio>
+      </>
+    </>
   );
 };
 

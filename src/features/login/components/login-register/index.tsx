@@ -17,7 +17,7 @@ import { useMutateRegisterLogin } from "../../hooks/useLogin";
 import { Toast } from "primereact/toast";
 import { message } from "../../../../../messageFront";
 import { useRouter } from "next/dist/client/router";
-import { domainCode } from "../../../../helpers/domainApi";
+import { domainCode } from "../../../../constants/domainApi";
 import modalConfirmContext from "../../../../context/modalConfirmContext";
 
 const registerComponent = () => {

@@ -1,10 +1,18 @@
-import styled from "styled-components";
-
+import styled, { keyframes } from "styled-components";
+const fadeIn = keyframes`
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+`;
 export const Container = styled.div`
   width: 70%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  animation: 1s ${fadeIn} ease-in-out;
 `;
 
 export const ContainerHeader = styled.div`
@@ -38,9 +46,8 @@ export const ContainerHeader = styled.div`
     flex-direction: row;
     align-items: center;
     justify-content: flex-end;
-    & > div:nth-child(2) {
-      padding-right: 10px;
-      padding-left: 10px;
+    & > div {
+      cursor: pointer;
     }
   }
 `;
@@ -57,7 +64,9 @@ export const ContainerSendMessage = styled.div`
   justify-content: space-between;
   background-color: var(--color-white);
   border-top: 1px solid var(--color-three);
-
+  & i {
+    cursor: pointer;
+  }
   & > div:nth-child(1),
   & > div:nth-child(3) {
     width: 10%;
@@ -70,4 +79,22 @@ export const ContainerSendMessage = styled.div`
   & > div:nth-child(2) {
     width: 90%;
   }
+`;
+export const ContainerImgInitial = styled.div`
+  width: 250px;
+  background-color: #fff;
+  border-radius: 100%;
+  height: 250px;
+  margin: auto;
+  animation: 1s ${fadeIn} ease-in-out;
+  h1 {
+    text-align: center;
+  }
+  & img {
+    width: 100%;
+    height: 100%;
+  }
+  -webkit-box-shadow: 0px 32px 44px -7px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: 0px 32px 44px -7px rgba(0, 0, 0, 0.4);
+  box-shadow: 0px 32px 44px -7px rgba(0, 0, 0, 0.4);
 `;

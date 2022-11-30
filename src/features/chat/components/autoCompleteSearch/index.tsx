@@ -1,45 +1,68 @@
 import useUser from "../../../../hooks/useUser";
-import { IUser } from "../../../login/models/login.model";
+import { IChat, IUser } from "../../../login/models/login.model";
 import { Container } from "./styles";
 import { v4 as uuid } from "uuid";
+import chatsContext from "../../../../context/chatsContext";
+import { useContext } from "react";
 const autoCompleteSearch = ({
   dataUsers,
   socketIO,
+  updatetUserSearchInput,
 }: {
-  dataUsers: Array<any>;
+  dataUsers: Array<IUser>;
   socketIO: any;
+  updatetUserSearchInput: (value: string) => void;
 }) => {
-  const createChat = (dataUserChat: IUser) => {
-    const userLogin = useUser().getUserLogin();
+  const { updateAddNewChat } = useContext(chatsContext);
+  const { getUserLogin, createChatUser, createJsonChatUser } = useUser();
+  const userLogin = getUserLogin();
+
+  const filter = (dataUsers: Array<IUser>) => {
+    return dataUsers.filter((u) => u.idUnique !== userLogin?.idUnique);
+  };
+
+  const createChatSocket = (chat: IChat) => {
     socketIO.emit("createChat", {
-      userCreate: userLogin?.uuid,
-      chatId: uuid(),
-      members: [userLogin?.uuid, dataUserChat.uuid],
+      idUserCreation: userLogin?.idUnique,
+      chat: {
+        ...chat,
+        members: chat.members.map((m) => m.idUnique),
+      },
     });
+  };
+
+  const addNewChatTypeOneToOne = (userOther: IUser) => {
+    const chat = createJsonChatUser(uuid(), userOther);
+    updateAddNewChat(chat);
+    createChatSocket(chat);
+    createChatUser(chat);
+    updatetUserSearchInput("");
   };
 
   return (
     <Container>
-      {dataUsers.length === 0 && (
+      <div>
+        {filter(dataUsers).length === 0 && (
+          <ul>
+            <li>No se encontrarón resultados.</li>
+          </ul>
+        )}
         <ul>
-          <li>No se encontrarón resultados.</li>
+          {filter(dataUsers).map((data, index) => {
+            return (
+              <li
+                key={index}
+                onClick={() => {
+                  addNewChatTypeOneToOne(data);
+                }}
+              >
+                <img src={data.picture || "/yo.jpg"} />
+                {data.userName}
+              </li>
+            );
+          })}
         </ul>
-      )}
-      <ul>
-        {dataUsers.map((data, index) => {
-          return (
-            <li
-              key={index}
-              onClick={() => {
-                createChat(data);
-              }}
-            >
-              <img src="/yo.jpg" />
-              {data.userName}
-            </li>
-          );
-        })}
-      </ul>
+      </div>
     </Container>
   );
 };

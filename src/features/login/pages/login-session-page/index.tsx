@@ -10,7 +10,7 @@ const sessionPage = () => {
   return (
     <div>
       <ContainerPage>
-        <LoginComponent />d
+        <LoginComponent />
       </ContainerPage>
     </div>
   );

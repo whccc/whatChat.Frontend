@@ -4,9 +4,8 @@ import chatOpenContext from "../../../../context/chatOpenContext";
 import chatsContext from "../../../../context/chatsContext";
 import { sortArrayJson } from "../../../../helpers/helpers";
 import useUser from "../../../../hooks/useUser";
-import { IChat, IUser } from "../../../login/models/login.model";
+import { IUser } from "../../../login/models/login.model";
 import { userSearch } from "../../hooks/useChat";
-import useChats from "../../hooks/useChats";
 import AutoCompleteSearch from "../autoCompleteSearch";
 import CardChat from "../cardChat";
 import {
@@ -60,7 +59,7 @@ const chatContainerChats = ({ socketIO }: { socketIO: any }) => {
   useEffect(() => {
     getUserBySearch();
   }, [userSearchInput]);
-
+  console.log("fuera del hook", chats);
   return (
     <Container>
       <ContainerSectionOne>
@@ -118,6 +117,7 @@ const chatContainerChats = ({ socketIO }: { socketIO: any }) => {
                     dataChat={data}
                     userIdUniqueLogin={user.idUnique}
                     updateChatOpen={updateChatOpen}
+                    socketIO={socketIO}
                   />
                 );
               })}

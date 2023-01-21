@@ -14,3 +14,9 @@ export interface IDataMessage {
   message: string;
   idChat: string;
 }
+
+export interface IChatWriting {
+  to: string;
+  idChat: string;
+  writing: boolean;
+}

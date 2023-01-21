@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Socket } from "socket.io-client";
 import chatOpenContext from "../../../../context/chatOpenContext";
 import chatsContext from "../../../../context/chatsContext";
@@ -15,6 +15,7 @@ import {
 } from "./styles";
 
 const chatContainerChat = ({ socketIO }: { socketIO: Socket | null }) => {
+  const messageWrapperRef = useRef<HTMLDivElement>(null);
   const [otherUser, setOtherUser] = useState<IOtherMember | null>(null);
   const [message, setMessage] = useState("");
 
@@ -39,8 +40,14 @@ const chatContainerChat = ({ socketIO }: { socketIO: Socket | null }) => {
       isWriting: false,
       order: 0,
     });
+    notWritingChat();
   };
-
+  const scrollToBottom = () => {
+    messageWrapperRef.current?.scrollTo({
+      behavior: "smooth",
+      top: messageWrapperRef.current?.scrollHeight + 56,
+    });
+  };
   const addMessage = () => {
     if (data && data.idChat) {
       sendEmitMessage(message);
@@ -65,9 +72,30 @@ const chatContainerChat = ({ socketIO }: { socketIO: Socket | null }) => {
     socketIO!.emit("message", dataMessage);
   };
 
+  const writingChat = () => {
+    socketIO?.emit("writingChat", {
+      idChat: data.idChat,
+      writing: true,
+      to: otherUser?.idUnique,
+    });
+  };
+
+  const notWritingChat = () => {
+    console.log("desmontaron");
+    socketIO?.emit("notWritingChat", {
+      idChat: data.idChat,
+      writing: false,
+      to: otherUser?.idUnique,
+    });
+  };
+
   useEffect(() => {
     filterUserLogin();
   }, [data]);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [data.messages]);
 
   return data.idChat ? (
     <Container>
@@ -88,7 +116,7 @@ const chatContainerChat = ({ socketIO }: { socketIO: Socket | null }) => {
         </div>
       </ContainerHeader>
 
-      <ContainerMessage>
+      <ContainerMessage ref={messageWrapperRef}>
         {data.messages.map((message, index) => (
           <CardMessage key={index} message={message} />
         ))}
@@ -103,7 +131,10 @@ const chatContainerChat = ({ socketIO }: { socketIO: Socket | null }) => {
             type="text"
             placeholder="Escriba un mensaje..."
             value={message}
-            onChange={(e) => setMessage(e.target.value)}
+            onChange={(e) => {
+              setMessage(e.target.value);
+              writingChat();
+            }}
           />
         </div>
 

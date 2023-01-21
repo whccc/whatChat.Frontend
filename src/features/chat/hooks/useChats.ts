@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
 import chatsContext from "../../../context/chatsContext";
 import { IChat } from "../../login/models/login.model";
+import { IChatWriting } from "../models/chat.model";
 
 const useChats = () => {
   const [chats, setChats] = useState<Array<IChat>>([]);
@@ -14,7 +15,7 @@ const useChats = () => {
     const chat = chats.find((c) => c.idChat === idChat);
     console.log(chats, "ol chta");
     if (chat) {
-      const chatsOrder = orderChat(chats, idChat, message);
+      const chatsOrder = orderChat([...chats], idChat, message);
       console.log(chatsOrder, "chatss");
       setChats(chatsOrder);
     }
@@ -36,11 +37,22 @@ const useChats = () => {
     return chats.find((c) => c.idChat === idChat);
   };
 
+  const writingChat = (data: IChatWriting) => {
+    const chatIndex = chats.findIndex((c) => c.idChat === data.idChat);
+    console.log(chatIndex, chats, "writting");
+    if (chatIndex >= 0) {
+      const newChats = [...chats];
+      newChats[chatIndex].isWriting = data.writing;
+      setChats(newChats);
+    }
+  };
+
   return {
     chats,
     updateAddNewChat,
     addNewMessageChat,
     chatByIdHookChatsHookChats,
+    writingChat,
   };
 };
 

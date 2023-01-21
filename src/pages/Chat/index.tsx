@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef } from "react";
+import { memo, useContext, useEffect, useRef } from "react";
 import ChatPage from "../../features/chat/pages/chat-page";
 import conectionSocketIOContext from "../../context/conectionSocketContext";
 import chatsContext from "../../context/chatsContext";
@@ -22,6 +22,7 @@ const chatsPage = () => {
     updateAddNewChat,
     addNewMessageChat,
     chatByIdHookChatsHookChats,
+    writingChat,
   } = useChats();
 
   useEffect(() => {
@@ -38,7 +39,11 @@ const chatsPage = () => {
     <>
       <conectionSocketIOContext.Provider value={socket}>
         <chatOpenContext.Provider
-          value={{ data: chat, updateChatOpen, updateMessageChatOpen }}
+          value={{
+            data: chat,
+            updateChatOpen,
+            updateMessageChatOpen,
+          }}
         >
           <chatsContext.Provider
             value={{
@@ -46,6 +51,7 @@ const chatsPage = () => {
               updateAddNewChat,
               addNewMessageChat,
               chatByIdHookChatsHookChats,
+              writingChat,
             }}
           >
             <div>

@@ -7,6 +7,8 @@ const chatOpenContext = React.createContext({
     members: [],
     messages: [],
     typeChat: null,
+    order: 0,
+    isWriting: false,
   } as IChat,
   updateChatOpen: (_dataMessage: IChat) => {},
   updateMessageChatOpen: (_message: string) => {},

@@ -6,7 +6,7 @@ import useUser from "../../../../hooks/useUser";
 import { IChat, IUser } from "../../../login/models/login.model";
 import ChatContainerChat from "../../components/chatContainerChat";
 import ChatContainerChats from "../../components/chatContainerChats";
-import { IDataMessage } from "../../models/chat.model";
+import { IChatWriting, IDataMessage } from "../../models/chat.model";
 import { Container, WrapperToastMessage } from "./styles";
 
 const chatPage = () => {
@@ -14,21 +14,24 @@ const chatPage = () => {
   const audio = useRef<HTMLAudioElement>(null);
 
   const socketIO = useContext(conectionSocketIOContext);
-  const { chatByIdHookChatsHookChats, chats } = useContext(chatsContext);
+  const { chatByIdHookChatsHookChats, chats, writingChat } =
+    useContext(chatsContext);
   const { addNewMessageChatUser, getUserLogin, createJsonChatUser } = useUser();
   const { updateAddNewChat, addNewMessageChat } = useContext(chatsContext);
 
   useEffect(() => {
-    console.log("useEff", chats.length);
+    listeningWritingChat();
     listeningToMessages();
+    listeningNotWritingChat();
     return () => {
       socketIO?.off("listeningToMessages");
+      socketIO?.off("sendWritingChat");
+      socketIO?.off("sendNotWritingChat");
     };
-  }, []);
+  }, [chats]);
 
   const listeningToMessages = () => {
     socketIO!.on("listeningToMessages", (data: IDataMessage) => {
-      console.log(chats.length, "lenggt");
       toast?.current?.show({
         severity: "success",
         summary: "Tiene un mensaje nuevo",
@@ -36,6 +39,20 @@ const chatPage = () => {
       });
       audio.current?.play();
       addMessage(data);
+    });
+  };
+
+  const listeningNotWritingChat = () => {
+    socketIO?.on("sendNotWritingChat", (data: IChatWriting) => {
+      console.log("Estan escribiendo", data);
+      writingChat(data);
+    });
+  };
+
+  const listeningWritingChat = () => {
+    socketIO?.on("sendWritingChat", (data: IChatWriting) => {
+      console.log("Estan escribiendo", data);
+      writingChat(data);
     });
   };
 
@@ -58,28 +75,10 @@ const chatPage = () => {
       dataChat.messages.push(message);
       updateAddNewChat(dataChat);
     }
-    setTimeout(() => {
-      // addNewMessageChat(message, idChat);
-      // addNewMessageChatUser(message, idChat);
-      console.log("hook");
-    }, 10000);
+    addNewMessageChat(message, idChat);
+    addNewMessageChatUser(message, idChat);
   };
 
-  const p = () => {
-    const dataChat = createJsonChatUser(
-      "1b2882fa-f6d9-4286-9d19-b612c76d989c",
-      {
-        idUnique: "4aa5edf1-4a3a-42a4-a0c4-8f5a8b",
-        userName: "s",
-        picture: null,
-      } as IUser
-    );
-    //  dataChat.messages.push(message);
-    updateAddNewChat(dataChat);
-    setTimeout(() => {
-      console.log(chats.length, "bu");
-    }, 10000);
-  };
   return (
     <Container>
       <ChatContainerChats socketIO={socketIO} />
@@ -90,7 +89,6 @@ const chatPage = () => {
         </WrapperToastMessage>
         <audio ref={audio} src="/message.mp3"></audio>
       </>
-      <button onClick={p}>s</button>
     </Container>
   );
 };

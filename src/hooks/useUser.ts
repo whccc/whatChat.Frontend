@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import { TypesChat } from "../constants/typesChat";
+import { IChatOf } from "../features/chat/models/chat.model";
 import { IChat, IUser } from "../features/login/models/login.model";
 
 export default function useUser() {
@@ -31,22 +32,31 @@ export default function useUser() {
     return user.dataChats.length;
   };
 
-  const addNewMessageChatUser = (message: string, idChat: string) => {
+  const addNewMessageChatUser = (
+    message: string,
+    idChat: string,
+    of: IChatOf
+  ) => {
     const user = JSON.parse(localStorage.getItem("userData") || "") as IUser;
     const chat = user.dataChats;
     if (chat) {
-      const chatsOrder = orderChat(chat, idChat, message);
+      const chatsOrder = orderChat(chat, idChat, message, of);
       user.dataChats = chatsOrder;
       setUserLogin(user);
     }
   };
 
-  const orderChat = (chats: Array<IChat>, idChat: string, message: string) => {
+  const orderChat = (
+    chats: Array<IChat>,
+    idChat: string,
+    message: string,
+    of: IChatOf
+  ) => {
     for (const [i, chat] of chats.entries()) {
       chat.order = i + 1;
       if (chat.idChat === idChat) {
         chat.order = 0;
-        chat.messages.push(message);
+        chat.messages.push({ message, of });
       }
     }
     return chats;

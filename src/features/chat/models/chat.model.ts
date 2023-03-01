@@ -20,3 +20,15 @@ export interface IChatWriting {
   idChat: string;
   writing: boolean;
 }
+
+export interface IChatOf {
+  idUnique: string;
+  picture: string;
+  userName: string;
+}
+
+export interface ICallUser {
+  signal: any;
+  from: string;
+  name: string;
+}

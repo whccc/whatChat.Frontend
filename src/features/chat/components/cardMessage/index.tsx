@@ -1,8 +1,12 @@
+import useUser from "../../../../hooks/useUser";
+import { IChatOf } from "../../models/chat.model";
 import { Container, ContainerMessage } from "./styles";
 
-const cardMessage = ({ message }: { message: string }) => {
+const cardMessage = ({ message, of }: { message: string; of: IChatOf }) => {
+  const { getUserLogin } = useUser();
+  const user = getUserLogin();
   return (
-    <Container>
+    <Container direction={user?.idUnique === of.idUnique}>
       <ContainerMessage>{message}</ContainerMessage>
     </Container>
   );

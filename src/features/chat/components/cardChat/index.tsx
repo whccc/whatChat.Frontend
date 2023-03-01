@@ -32,7 +32,7 @@ const cardChat = ({
     });
   };
   return (
-    <Wrapper title={dataChat.messages.at(-1)}>
+    <Wrapper title={dataChat.messages.at(-1)?.message}>
       <Container onClick={changeChatOpen}>
         <div>
           <img src={filterUserLogin[0].picture || "/yo.jpg"} />
@@ -43,7 +43,7 @@ const cardChat = ({
           {dataChat.isWriting ? (
             <WrapperWriting>Escribiendo...</WrapperWriting>
           ) : (
-            <WrapperMessage>{dataChat.messages.at(-1)}</WrapperMessage>
+            <WrapperMessage>{dataChat.messages.at(-1)?.message}</WrapperMessage>
           )}
         </div>
 

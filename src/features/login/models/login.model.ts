@@ -1,4 +1,5 @@
 import { TypesChat } from "../../../constants/typesChat";
+import { IChatOf } from "../../chat/models/chat.model";
 
 //Interface register user
 export interface IRegisterUser {
@@ -17,7 +18,7 @@ export interface IChat {
         picture: string;
       }>
     | [];
-  messages: Array<string>;
+  messages: Array<{ message: string; of: IChatOf }>;
   typeChat: TypesChat | null;
   order: number;
   isWriting: boolean;

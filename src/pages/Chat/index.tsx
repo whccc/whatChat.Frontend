@@ -9,6 +9,8 @@ import useChatOpen from "../../features/chat/hooks/useChatOpen";
 import useChats from "../../features/chat/hooks/useChats";
 import { Toast } from "primereact/toast";
 import { WrapperToastMessage } from "../../features/chat/pages/chat-page/styles";
+import useCallOrAnswer from "../../features/chat/hooks/useCallOrAnswer";
+import callOrAnswerContext from "../../context/callOrAnswerContext";
 
 const chatsPage = () => {
   const toast = useRef<Toast>(null);
@@ -17,13 +19,8 @@ const chatsPage = () => {
   const { validIfTokenExits, loadAuth } = useValidAuth();
   const { socket, conectionSocket } = useSocket();
   const { chat, updateChatOpen, updateMessageChatOpen } = useChatOpen();
-  const {
-    chats,
-    updateAddNewChat,
-    addNewMessageChat,
-    chatByIdHookChatsHookChats,
-    writingChat,
-  } = useChats();
+  const chats = useChats();
+  const callOrAnswer = useCallOrAnswer();
 
   useEffect(() => {
     validIfTokenExits();
@@ -45,18 +42,12 @@ const chatsPage = () => {
             updateMessageChatOpen,
           }}
         >
-          <chatsContext.Provider
-            value={{
-              chats,
-              updateAddNewChat,
-              addNewMessageChat,
-              chatByIdHookChatsHookChats,
-              writingChat,
-            }}
-          >
-            <div>
-              <ChatPage />
-            </div>
+          <chatsContext.Provider value={chats}>
+            <callOrAnswerContext.Provider value={callOrAnswer}>
+              <div>
+                <ChatPage />
+              </div>
+            </callOrAnswerContext.Provider>
           </chatsContext.Provider>
         </chatOpenContext.Provider>
       </conectionSocketIOContext.Provider>

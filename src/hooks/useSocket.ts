@@ -7,7 +7,8 @@ const useSocket = () => {
   const user = useUser().getUserLogin();
 
   const conectionSocket = () => {
-    const conection = socketIOClient("http://localhost:4000", {
+    console.log("sockerttt,assa");
+    const conection = socketIOClient("https://192.168.20.5:4000", {
       query: { idUser: user!.idUnique },
     });
     setSocket(conection as Socket);

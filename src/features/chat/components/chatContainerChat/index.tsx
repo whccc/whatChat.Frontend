@@ -4,7 +4,7 @@ import chatOpenContext from "../../../../context/chatOpenContext";
 import chatsContext from "../../../../context/chatsContext";
 import useUser from "../../../../hooks/useUser";
 import { InputTwo } from "../../../../styles/styles.inputsmain";
-import { IDataMessage, IOtherMember } from "../../models/chat.model";
+import { IChatOf, IDataMessage, IOtherMember } from "../../models/chat.model";
 import CardMessage from "../cardMessage";
 import {
   Container,
@@ -13,11 +13,15 @@ import {
   ContainerMessage,
   ContainerImgInitial,
 } from "./styles";
+import CallUser from "../incomingCall";
+import callOrAnswerContext from "../../../../context/callOrAnswerContext";
 
 const chatContainerChat = ({ socketIO }: { socketIO: Socket | null }) => {
   const messageWrapperRef = useRef<HTMLDivElement>(null);
   const [otherUser, setOtherUser] = useState<IOtherMember | null>(null);
   const [message, setMessage] = useState("");
+  const { onSetCallChat, onSetIdUniqueOtherUser } =
+    useContext(callOrAnswerContext);
 
   const { data, updateChatOpen } = useContext(chatOpenContext);
   const { addNewMessageChat } = useContext(chatsContext);
@@ -50,9 +54,17 @@ const chatContainerChat = ({ socketIO }: { socketIO: Socket | null }) => {
   };
   const addMessage = () => {
     if (data && data.idChat) {
+      const { idUnique, userName, picture } = getUserLogin()!;
+
+      const of: IChatOf = {
+        idUnique,
+        picture,
+        userName,
+      };
+
       sendEmitMessage(message);
-      addNewMessageChat(message, data.idChat);
-      addNewMessageChatUser(message, data.idChat);
+      addNewMessageChat(message, data.idChat, of);
+      addNewMessageChatUser(message, data.idChat, of);
       setMessage("");
     }
   };
@@ -89,6 +101,11 @@ const chatContainerChat = ({ socketIO }: { socketIO: Socket | null }) => {
     });
   };
 
+  const onCallChat = () => {
+    onSetCallChat(true);
+    onSetIdUniqueOtherUser(otherUser?.idUnique!);
+  };
+
   useEffect(() => {
     filterUserLogin();
   }, [data]);
@@ -96,7 +113,7 @@ const chatContainerChat = ({ socketIO }: { socketIO: Socket | null }) => {
   useEffect(() => {
     scrollToBottom();
   }, [data.messages]);
-
+  console.log(data, "ss");
   return data.idChat ? (
     <Container>
       <ContainerHeader>
@@ -110,6 +127,9 @@ const chatContainerChat = ({ socketIO }: { socketIO: Socket | null }) => {
         </div>
 
         <div>
+          <div style={{ marginRight: "10px" }} onClick={onCallChat}>
+            <i className="pi pi-phone"></i>
+          </div>
           <div onClick={closeChatOpen}>
             <i className="pi pi-times"></i>
           </div>
@@ -117,8 +137,8 @@ const chatContainerChat = ({ socketIO }: { socketIO: Socket | null }) => {
       </ContainerHeader>
 
       <ContainerMessage ref={messageWrapperRef}>
-        {data.messages.map((message, index) => (
-          <CardMessage key={index} message={message} />
+        {data.messages.map((data, index) => (
+          <CardMessage key={index} message={data.message} of={data.of} />
         ))}
       </ContainerMessage>
 

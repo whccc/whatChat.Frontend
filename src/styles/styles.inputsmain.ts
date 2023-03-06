@@ -16,6 +16,21 @@ export const Input = styled.input<inputProps>`
   }
 `;
 
+export const InputTextArea = styled.textarea<inputProps>`
+  background: #fff 0 0 no-repeat padding-box;
+  border: 1px solid ${(props) => (props.showError ? "#ad0808" : "#e2e2e2")};
+  border-radius: 6px;
+  outline: none;
+  padding: 5px;
+  width: 100%;
+  height: 150px;
+  min-height: 100px;
+  resize: vertical;
+  font: normal normal normal 12px/16px MontserratRegular;
+  &:hover {
+    border-color: var(--color-four);
+  }
+`;
 export const InputTwo = styled.input`
   background: var(--color-one);
   width: 100%;

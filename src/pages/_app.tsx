@@ -18,7 +18,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     <>
       <GlobalStyle />
       <QueryClientProvider client={queryClient}>
-        <modalConfirmContext.Provider value={{ ...useValueModalConfirm }}>
+        <modalConfirmContext.Provider value={useValueModalConfirm}>
           <Component {...pageProps} />
           <ModalConfirm />
         </modalConfirmContext.Provider>

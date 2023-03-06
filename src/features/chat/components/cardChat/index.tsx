@@ -35,19 +35,14 @@ const cardChat = ({
     <Wrapper title={dataChat.messages.at(-1)?.message}>
       <Container onClick={changeChatOpen}>
         <div>
-          <img src={filterUserLogin[0].picture || "/yo.jpg"} />
+          <img src={filterUserLogin[0].picture || "/Avatar.png"} />
         </div>
 
         <div>
           {filterUserLogin[0].userName}
-          {dataChat.isWriting ? (
-            <WrapperWriting>Escribiendo...</WrapperWriting>
-          ) : (
-            <WrapperMessage>{dataChat.messages.at(-1)?.message}</WrapperMessage>
-          )}
-        </div>
 
-        <NewMessage>1</NewMessage>
+          <WrapperMessage>{dataChat.messages.at(-1)?.message}</WrapperMessage>
+        </div>
       </Container>
     </Wrapper>
   );

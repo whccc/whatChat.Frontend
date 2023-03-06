@@ -1,5 +1,5 @@
-import { useContext, useEffect, useRef, useState } from "react";
-import { Socket } from "socket.io-client";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import socketIOClient, { Socket } from "socket.io-client";
 import chatOpenContext from "../../../../context/chatOpenContext";
 import chatsContext from "../../../../context/chatsContext";
 import useUser from "../../../../hooks/useUser";
@@ -20,7 +20,7 @@ const chatContainerChat = ({ socketIO }: { socketIO: Socket | null }) => {
   const messageWrapperRef = useRef<HTMLDivElement>(null);
   const [otherUser, setOtherUser] = useState<IOtherMember | null>(null);
   const [message, setMessage] = useState("");
-  const { onSetCallChat, onSetIdUniqueOtherUser } =
+  const { onSetCallChat, onSetIdUniqueOtherUser, onSetDataOfUserCall } =
     useContext(callOrAnswerContext);
 
   const { data, updateChatOpen } = useContext(chatOpenContext);
@@ -68,6 +68,7 @@ const chatContainerChat = ({ socketIO }: { socketIO: Socket | null }) => {
       setMessage("");
     }
   };
+  const [conection, setConection] = useState<Socket | null>(null);
 
   const sendEmitMessage = (message: string) => {
     const { idUnique, userName, picture } = getUserLogin()!;
@@ -81,7 +82,10 @@ const chatContainerChat = ({ socketIO }: { socketIO: Socket | null }) => {
       message,
       idChat: data.idChat,
     } as IDataMessage;
-    socketIO!.emit("message", dataMessage);
+    console.log("holaaa", dataMessage, socketIO?.listeners, socketIO!.id);
+    console.log("sockerttt,assa");
+
+    socketIO!.emit("messageChat", dataMessage);
   };
 
   const writingChat = () => {
@@ -103,7 +107,9 @@ const chatContainerChat = ({ socketIO }: { socketIO: Socket | null }) => {
 
   const onCallChat = () => {
     onSetCallChat(true);
+    const { idUnique, userName } = otherUser!;
     onSetIdUniqueOtherUser(otherUser?.idUnique!);
+    onSetDataOfUserCall(userName, idUnique);
   };
 
   useEffect(() => {
@@ -119,7 +125,7 @@ const chatContainerChat = ({ socketIO }: { socketIO: Socket | null }) => {
       <ContainerHeader>
         <div>
           <div>
-            <img src={otherUser?.picture || "/yo.jpg"} />
+            <img src={otherUser?.picture || "/Avatar.png"} />
           </div>
           <div>
             <label>{otherUser?.userName}</label>

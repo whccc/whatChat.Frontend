@@ -38,7 +38,7 @@ const useChats = () => {
   };
 
   const chatByIdHookChatsHookChats = (idChat: string) => {
-    console.log(chats.length, "desde el hook");
+    console.log(chats.length, "desde el hook", chats, chats);
     return chats.find((c) => c.idChat === idChat);
   };
 

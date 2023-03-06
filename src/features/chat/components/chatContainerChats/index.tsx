@@ -1,4 +1,5 @@
-import { useContext, useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import React, { useContext, useEffect, useState } from "react";
 import { useQueryClient } from "react-query";
 import chatOpenContext from "../../../../context/chatOpenContext";
 import chatsContext from "../../../../context/chatsContext";
@@ -15,10 +16,11 @@ import {
   ContainerSectionTwoChats,
 } from "./styles";
 
-const chatContainerChats = ({ socketIO }: { socketIO: any }) => {
+const ChatContainerChats = ({ socketIO }: { socketIO: any }) => {
   const [user, setUser] = useState<IUser | null>(null);
   const [userSearchInput, setUserSearchInput] = useState("");
   const useQueryClientHook = useQueryClient();
+  const router = useRouter();
 
   const { data, refetch } = userSearch(userSearchInput);
   const { getUserLogin, deleteUserLogin } = useUser();
@@ -29,6 +31,14 @@ const chatContainerChats = ({ socketIO }: { socketIO: any }) => {
   /**************************/
   /******** METODOS *********/
   /**************************/
+  useEffect(() => {
+    getChats();
+  }, []);
+
+  useEffect(() => {
+    getUserBySearch();
+  }, [userSearchInput]);
+
   const getChats = () => {
     const user = getUserLogin();
     if (!user) {
@@ -43,7 +53,7 @@ const chatContainerChats = ({ socketIO }: { socketIO: any }) => {
       updateAddNewChat({ ...data, order, isWriting: false });
     }
   };
-  console.log(user, chats.length);
+
   const getUserBySearch = async () => {
     if (userSearchInput === "") {
       useQueryClientHook.setQueriesData(["userSearchChat"], null);
@@ -52,14 +62,10 @@ const chatContainerChats = ({ socketIO }: { socketIO: any }) => {
     refetch();
   };
 
-  useEffect(() => {
-    getChats();
-  }, []);
+  const navigationSetting = () => {
+    router.push("/Setting");
+  };
 
-  useEffect(() => {
-    getUserBySearch();
-  }, [userSearchInput]);
-  console.log("fuera del hook", chats);
   return (
     <Container>
       <ContainerSectionOne>
@@ -70,15 +76,19 @@ const chatContainerChats = ({ socketIO }: { socketIO: any }) => {
 
         <div>
           <div>
-            <i className="pi pi-briefcase"></i>
+            <i
+              className="pi pi-cog"
+              title="Configuración"
+              onClick={navigationSetting}
+            ></i>
           </div>
 
           <div>
-            <i className="pi pi-briefcase"></i>
-          </div>
-
-          <div>
-            <i className="pi pi-sign-out" onClick={deleteUserLogin}></i>
+            <i
+              className="pi pi-sign-out"
+              onClick={deleteUserLogin}
+              title="Cerrar Sesión"
+            ></i>
           </div>
         </div>
       </ContainerSectionOne>
@@ -127,4 +137,4 @@ const chatContainerChats = ({ socketIO }: { socketIO: any }) => {
   );
 };
 
-export default chatContainerChats;
+export default React.memo(ChatContainerChats);

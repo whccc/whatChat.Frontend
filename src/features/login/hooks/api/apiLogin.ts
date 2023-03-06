@@ -11,7 +11,7 @@ export const postRegister = async (
   const { data } = await axios.post(
     "https://192.168.20.5:5000/api/auth/register",
     {
-      dataUser,
+      ...dataUser,
     }
   );
   return data;

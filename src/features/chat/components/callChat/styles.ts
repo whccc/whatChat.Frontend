@@ -4,7 +4,8 @@ export const WrapperCallUser = styled.div`
   position: fixed;
   top: 0;
   left: 0;
-  background-color: rgba(31, 174, 239, 0.8);
+  overflow: auto;
+  background-color: rgb(35 68 82 / 80%);
   z-index: 5;
   width: 100%;
   height: 100%;
@@ -12,6 +13,8 @@ export const WrapperCallUser = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  padding-top: 50px;
+  padding-bottom: 20px;
   .wrapper-icons-call-user {
     display: flex;
     align-items: center;
@@ -20,6 +23,9 @@ export const WrapperCallUser = styled.div`
   & i[aria-label="icon-close"] {
     margin-right: 10px;
     background-color: var(--color-nine);
+  }
+  & h1 {
+    color: var(--color-white);
   }
 
   & i {

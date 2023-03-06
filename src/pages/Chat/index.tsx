@@ -1,4 +1,4 @@
-import { memo, useContext, useEffect, useRef } from "react";
+import React, { memo, useContext, useEffect, useRef } from "react";
 import ChatPage from "../../features/chat/pages/chat-page";
 import conectionSocketIOContext from "../../context/conectionSocketContext";
 import chatsContext from "../../context/chatsContext";
@@ -61,4 +61,4 @@ const chatsPage = () => {
   );
 };
 
-export default chatsPage;
+export default React.memo(chatsPage);

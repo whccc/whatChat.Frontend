@@ -1,13 +1,13 @@
 import React from "react";
 import { Socket } from "socket.io-client";
 
-const callOrAnswerContext = React.createContext({
+const CallOrAnswerContext = React.createContext({
   callUser: {
     incomingCall: false,
     callChat: false,
   },
   dataUserToCall: {
-    idUniqueOtherUser: null,
+    idUniqueOtherUser: "",
   },
   answerUser: {
     answerCall: false,
@@ -16,6 +16,7 @@ const callOrAnswerContext = React.createContext({
       name: null,
     },
   },
+  streamToAnswerCall: null,
   listenerIncomingCall: (_socketIO: Socket) => {},
   onCallChat: (_socketIO: Socket, _stream: MediaStream, _to: string) => {},
   onSetCallChat: (_value: boolean) => {},
@@ -23,7 +24,8 @@ const callOrAnswerContext = React.createContext({
   onSetAnswerCall: (_value: boolean) => {},
   onAnswerCall: (_stream: MediaStream, _socketIO: Socket, _to: string) => {},
   onSetIncomingCall: (_value: boolean) => {},
-  streamToAnswerCall: null,
-});
+  onSetDataOfUserCall: (_name: string, _idUnique: string) => {},
+  onLeaveCall: () => {},
+} as any);
 
-export default callOrAnswerContext;
+export default CallOrAnswerContext;

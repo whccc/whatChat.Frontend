@@ -4,7 +4,7 @@ export const WrapperCallUser = styled.div`
   position: fixed;
   top: 0;
   left: 0;
-  background-color: rgba(31, 174, 239, 0.8);
+  background-color: rgb(35 68 82 / 80%);
   z-index: 5;
   width: 100%;
   height: 100%;
@@ -36,5 +36,9 @@ export const WrapperCallUser = styled.div`
     &:hover {
       opacity: 0.7;
     }
+  }
+
+  & h1 {
+    color: var(--color-white);
   }
 `;

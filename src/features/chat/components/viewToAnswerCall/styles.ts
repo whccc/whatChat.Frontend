@@ -2,8 +2,8 @@ import styled from "styled-components";
 
 export const WrapperViewToAnswerCall = styled.div`
   position: fixed;
-
-  background-color: rgba(31, 174, 239, 0.8);
+  overflow: auto;
+  background-color: rgb(35 68 82 / 80%);
   width: 100%;
   height: 100%;
   z-index: 5;
@@ -33,10 +33,14 @@ export const WrapperViewToAnswerCall = styled.div`
       opacity: 0.9;
     }
   }
+  & h1 {
+    color: var(--color-white);
+  }
 `;
 
 export const WrapperVideo = styled.div`
   width: 400px;
-  height: 400px;
-  border: 1px solid red;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;

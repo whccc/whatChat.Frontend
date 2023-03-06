@@ -9,6 +9,9 @@ import useUser from "../../../hooks/useUser";
 export const useCallOrAnswer = () => {
   const [incomingCall, setIncomingCall] = useState(false);
   const [callerSignal, setCallerSignal] = useState(null);
+  const musicPlayers = useRef<HTMLAudioElement | undefined>(
+    typeof Audio !== "undefined" ? new Audio("/llamada.mp3") : undefined
+  );
   const [streamToAnswerCall, setStreamToAnswerCall] =
     useState<MediaStream | null>(null);
   const [answerCall, setAnswerCall] = useState(false);
@@ -33,8 +36,15 @@ export const useCallOrAnswer = () => {
   const onSetAnswerCall = (value: boolean) => {
     setAnswerCall(value);
   };
-  const onSetIdUniqueOtherUser = (value: string) => {
+  const onSetIdUniqueOtherUser = (value: string | null) => {
     setIdUniqueOtherUser(value);
+  };
+
+  const onSetDataOfUserCall = (name: string, idUnique: string) => {
+    setDataOfUserCall({
+      idUnique,
+      name,
+    });
   };
   const onSetIncomingCall = (value: boolean) => {
     setIncomingCall(value);
@@ -48,6 +58,7 @@ export const useCallOrAnswer = () => {
         idUnique: from,
         name,
       });
+      setInterval(() => musicPlayers.current!.play(), 1000);
     });
   };
 
@@ -74,6 +85,7 @@ export const useCallOrAnswer = () => {
       peer.signal(signal);
       onSetCallChat(false);
       onSetAnswerCall(true);
+      musicPlayers.current!.pause();
     });
     connectionRef.current = peer;
   };
@@ -97,6 +109,15 @@ export const useCallOrAnswer = () => {
 
     peer.signal(callerSignal!);
     connectionRef.current = peer;
+    musicPlayers.current!.pause();
+  };
+
+  const onLeaveCall = () => {
+    onSetAnswerCall(false);
+    onSetCallChat(false);
+    onSetIncomingCall(false);
+    // connectionRef.current?.destroy();
+    musicPlayers.current!.pause();
   };
 
   return {
@@ -119,6 +140,8 @@ export const useCallOrAnswer = () => {
     onSetAnswerCall,
     onAnswerCall,
     onSetIncomingCall,
+    onSetDataOfUserCall,
+    onLeaveCall,
   };
 };
 
